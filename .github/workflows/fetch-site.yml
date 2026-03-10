@@ -7,12 +7,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Fetch site HTML
-        run: curl -sL -o index.html https://vrrggqg4kskwm.ok.kimi.link/
+      - name: Fetch complete site
+        run: |
+          wget --mirror --convert-links --adjust-extension --page-requisites --no-parent --no-host-directories -e robots=off https://vrrggqg4kskwm.ok.kimi.link/
+          ls -la
+          ls -la assets/ || true
       - name: Commit and push
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add index.html
-          git commit -m "Add Erranova site HTML"
+          git add -A
+          git commit -m "Fetch complete Erranova site with assets" || echo "No changes"
           git push
