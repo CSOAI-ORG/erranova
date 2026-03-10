@@ -1,0 +1,16 @@
+name: Fetch Site
+on: workflow_dispatch
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch site HTML
+        run: curl -sL -o index.html https://vrrggqg4kskwm.ok.kimi.link/
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Add Erranova site HTML"
+          git push
