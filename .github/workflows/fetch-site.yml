@@ -8,6 +8,32 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Fetch complete site
+name: Fetch Site
+on: workflow_dispatch
+permissions:
+  contents: write
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch complete site
+        run: |
+          wget --mirror --convert-links --adjust-extension --page-requisites --no-parent --no-host-directories -e robots=off https://vrrggqg4kskwm.ok.kimi.link/
+          ls -la
+          ls -la assets/ || true
+      - name: Remove Kimi SDK script
+        run: |
+          sed -i 's/<script src="https:\/\/www\.kimi\.com\/sdk-seed\.js" defer=""><\/script>//' index.html
+          echo "Cleaned index.html"
+          grep -c "kimi" index.html || echo "No kimi references found - clean!"
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Fetch Erranova site and remove Kimi SDK" || echo "No changes"
+          git push
         run: |
           wget --mirror --convert-links --adjust-extension --page-requisites --no-parent --no-host-directories -e robots=off https://vrrggqg4kskwm.ok.kimi.link/
           ls -la
